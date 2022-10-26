@@ -109,4 +109,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="medireminder">MediReminder</string>
+    <string name="title_description">Reminder App</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="full_name">Full Name</string>
+    <string name="age">Age</string>
+
 </resources>

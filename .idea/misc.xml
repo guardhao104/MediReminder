@@ -7,11 +7,13 @@
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout-w1240dp/content_scrolling.xml" value="0.1606425702811245" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout-w936dp/activity_login.xml" value="0.1" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout-w936dp/content_scrolling.xml" value="0.264" />
-        <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/activity_login.xml" value="0.2" />
+        <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/activity_register.xml" value="0.2203125" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/activity_reminder_list.xml" value="0.2" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/content_reminder_list.xml" value="0.2" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/content_scrolling.xml" value="0.264" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/fragment_first.xml" value="0.2" />
+        <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/layout/fragment_second.xml" value="0.1574074074074074" />
         <entry key="..\:/Users/Daniil/AndroidStudioProjects/MediReminder/app/src/main/res/menu/menu_reminder_list.xml" value="0.25" />
       </map>
     </option>
@@ -21,5 +23,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.2" />
+      </ProjectState>
+    </option>
   </component>
 </project>

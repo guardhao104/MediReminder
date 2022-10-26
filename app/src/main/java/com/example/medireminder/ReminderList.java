@@ -4,9 +4,9 @@ import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
+//import com.google.android.gms.tasks.OnFailureListener;
+//import com.google.android.gms.tasks.OnSuccessListener;
+//import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +20,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.medireminder.databinding.ActivityReminderListBinding;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+//import com.google.firebase.firestore.DocumentReference;
+//import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class ReminderList extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityReminderListBinding binding;
 
-    void x(){
+    /**void x(){
         Map<String, Object> user = new HashMap<>();
         user.put("first", "Ada");
         user.put("last", "Lovelace");
@@ -51,7 +51,7 @@ public class ReminderList extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
                     }
-                });    }
+                });    }*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
