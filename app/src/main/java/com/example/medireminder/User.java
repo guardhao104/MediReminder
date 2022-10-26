@@ -1,7 +1,7 @@
 package com.example.medireminder;
 
 public class User {
-    private String fullName, age, email;
+    public String fullName, age, email;
 
     public User(){
 
