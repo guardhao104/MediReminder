@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.medireminder.LandingPage;
 import com.example.medireminder.R;
 import com.example.medireminder.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -135,6 +136,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                 userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                                 System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                                 addToDatabase(userId, user);
+                                                startActivity(new Intent(RegisterActivity.this, LandingPage.class));
                                             }else{
                                                 Toast.makeText(RegisterActivity.this, "There has been an error", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.GONE);
