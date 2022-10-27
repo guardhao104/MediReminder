@@ -110,26 +110,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             editTextPassword.requestFocus();
             return;
         }
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        progressBar.setVisibility(View.VISIBLE);
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Ada");
-        user.put("last", "Lovelace");
-        user.put("born", 1815);
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+
+
+
 // Add a new document with a generated ID
 
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -138,6 +121,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             User user = new User(fullName, age, email);
+
                             // Create a new user with a first and last name
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -145,8 +129,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                String userId;
                                                 Toast.makeText(RegisterActivity.this, "User successfully registered", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.VISIBLE);
+                                                userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                                addToDatabase(userId, user);
                                             }else{
                                                 Toast.makeText(RegisterActivity.this, "There has been an error", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.GONE);
@@ -159,6 +147,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(RegisterActivity.this, "There has been an error before db creation", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
+                    }
+                });
+    }
+
+    private void addToDatabase(String uid, User user){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        progressBar.setVisibility(View.VISIBLE);
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("FullName", user.fullName);
+        userInfo.put("Age", user.age);
+        userInfo.put("email", user.email);
+        db.collection("users")
+                .document(uid)
+                .set(userInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(RegisterActivity.this,"Register sucess",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
