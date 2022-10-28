@@ -30,8 +30,8 @@ public class PatientListAdapter extends ArrayAdapter {
         TextView patientEmail = (TextView) view.findViewById(R.id.text_view_item_email);
 
         patientName.setText(patient.getName());
-        patientAge.setText(patient.getAge());
-        patientEmail.setText(patient.getEmail());
+        patientAge.setText("(" + patient.getAge() + ")");
+        // patientEmail.setText(patient.getEmail());
 
         return view;
     }

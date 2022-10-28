@@ -35,6 +35,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -46,71 +47,165 @@ import java.util.Map;
 public class PatientListActivity extends AppCompatActivity {
     private List<Patient> patientsList = new ArrayList<Patient>();
     private ListView listView = null;
-    private EditText editText;
+    private SearchView searchView;
+    private String searchStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_list);
-
-        initPatients();
-
-        PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, patientsList);//实例化FruitAdapter
-        listView = (ListView) findViewById(R.id.list_view_items);
-        listView.setAdapter(adapter);
-
-        // press listview item to open a new activity
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Patient patient = patientsList.get(i);
-
-                Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
-                intent.putExtra("patientName", patient.getName());
-                intent.putExtra("patientAge", patient.getAge());
-                intent.putExtra("patientEmail", patient.getEmail());
-
-                startActivity(intent);
-            }
-        });
-    }
-
-    // add data into patientslist
-    private void initPatients() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // get data from database and insert into listview
         db.collection("users")
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+                .whereEqualTo("IsPatient", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
 
-                            String fullname = document.getData().get("FullName").toString();
-                            String age = document.getData().get("Age").toString();
-                            String email = document.getData().get("email").toString();
+                                String fullname = document.getData().get("FullName").toString();
+                                String age = document.getData().get("Age").toString();
+                                String email = document.getData().get("email").toString();
 
-                            Patient patient = new Patient(fullname, age, email);
-                            patientsList.add(patient);
+                                Patient patient = new Patient(fullname, age, email);
+                                patientsList.add(patient);
 
-                            Log.d("PatientListActivity", "Test: " + fullname + " : " + age + " : " + email);
+                                Log.d("PatientListActivity", "Test: " + fullname + " : " + age + " : " + email);
+                            }
+                            PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, patientsList);
+                            listView = (ListView) findViewById(R.id.list_view_items);
+                            listView.setAdapter(adapter);
+
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Patient patient = patientsList.get(i);
+
+                                    Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
+                                    intent.putExtra("patientName", patient.getName());
+                                    intent.putExtra("patientAge", patient.getAge());
+                                    intent.putExtra("patientEmail", patient.getEmail());
+
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            Log.w("PatientListActivity", "Error getting documents.", task.getException());
                         }
-                    } else {
-                        Log.w("PatientListActivity", "Error getting documents.", task.getException());
                     }
+                });
+
+
+        // search user name then claen listview and insert search result into the listview
+        searchView = (SearchView) findViewById(R.id.list_view_search);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+//                Log.d("PatientListActivity", "Search: " + s);
+
+                db.collection("users")
+                        .whereEqualTo("IsPatient", true)
+                        .whereGreaterThanOrEqualTo("FullName", s)
+                        .whereLessThanOrEqualTo("FullName",s+ '\uf8ff')
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    List<Patient> searchResultList = new ArrayList<Patient>();
+
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                        String fullname = document.getData().get("FullName").toString();
+                                        String age = document.getData().get("Age").toString();
+                                        String email = document.getData().get("email").toString();
+
+                                        Patient patient = new Patient(fullname, age, email);
+                                        searchResultList.add(patient);
+
+
+                                        Log.d("PatientListActivity", document.getId() + " => " + document.getData());
+                                    }
+                                    PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, searchResultList);
+                                    listView = (ListView) findViewById(R.id.list_view_items);
+                                    listView.setAdapter(null);
+                                    listView.setAdapter(adapter);
+
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            Patient patient = patientsList.get(i);
+
+                                            Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
+                                            intent.putExtra("patientName", patient.getName());
+                                            intent.putExtra("patientAge", patient.getAge());
+                                            intent.putExtra("patientEmail", patient.getEmail());
+
+                                            startActivity(intent);
+                                        }
+                                    });
+                                } else {
+                                    Log.w("PatientListActivity", "Error getting documents.", task.getException());
+                                }
+                            }
+                        });
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                List<Patient> redisplayltList = new ArrayList<Patient>();
+
+                if(s.length() == 0)
+                {
+                    db.collection("users")
+                            .whereEqualTo("IsPatient", true)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                            String fullname = document.getData().get("FullName").toString();
+                                            String age = document.getData().get("Age").toString();
+                                            String email = document.getData().get("email").toString();
+
+                                            Patient patient = new Patient(fullname, age, email);
+                                            redisplayltList.add(patient);
+
+                                            Log.d("PatientListActivity", "Test: " + fullname + " : " + age + " : " + email);
+                                        }
+                                        PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, redisplayltList);
+                                        listView = (ListView) findViewById(R.id.list_view_items);
+                                        listView.setAdapter(adapter);
+
+                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                Patient patient = redisplayltList.get(i);
+
+                                                Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
+                                                intent.putExtra("patientName", patient.getName());
+                                                intent.putExtra("patientAge", patient.getAge());
+                                                intent.putExtra("patientEmail", patient.getEmail());
+
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    } else {
+                                        Log.w("PatientListActivity", "Error getting documents.", task.getException());
+                                    }
+                                }
+                            });
+                }
+
+                return false;
             }
         });
-
-
-        Patient patient0 = new Patient("A", "21", "qwe");
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
-        patientsList.add(patient0);
     }
 }
