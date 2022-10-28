@@ -118,4 +118,10 @@
     <string name="age">Age</string>
     <string name="title_activity_user_landing_page">UserLandingPage</string>
 
+
+    <!-- Strings related to Reminder form -->
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="name">Name</string>
+    <string name="medicine">Medicine</string>
 </resources>
