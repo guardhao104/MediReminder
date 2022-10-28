@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
@@ -86,6 +87,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             editTextFullName.requestFocus();
         }
 
+        if(!Pattern.matches("^[A-Z][a-zA-Z .]*[ ][A-Z][a-zA-Z .]*$", fullName)){
+            editTextFullName.setError("Full name format is wrong!");
+            editTextFullName.requestFocus();
+        }
+
         if(age.isEmpty()){
             editTextAge.setError("Age is required!");
             editTextAge.requestFocus();
@@ -121,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            User user = new User(fullName, age, email);
+                            User user = new User(fullName, age, email, true);
 
                             // Create a new user with a first and last name
                             FirebaseDatabase.getInstance().getReference("Users")
