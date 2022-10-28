@@ -166,6 +166,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         userInfo.put("FullName", user.fullName);
         userInfo.put("Age", user.age);
         userInfo.put("email", user.email);
+        userInfo.put("IsPatient", user.isPatient);
         db.collection("users")
                 .document(uid)
                 .set(userInfo)
