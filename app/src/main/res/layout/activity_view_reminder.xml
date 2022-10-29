@@ -6,26 +6,22 @@
     android:paddingRight="16dp"
     android:orientation="vertical" >
 
-
-    <TextView
-        android:id="@+id/reminderName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="Reminder Name" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/patientName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="50dp"
+            android:text="Reminder List"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/medicineName"
+    <ListView
+        android:id="@+id/reminderListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20sp"
-        android:textSize="20sp"
-        android:text="Medicine Name" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/medicineImage"
-        android:layout_width="match_parent"
-        android:layout_height="187dp" />
-
-
+        android:layout_height="match_parent"
+        android:scrollbars="none" />
 </LinearLayout>

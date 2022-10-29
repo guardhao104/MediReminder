@@ -17,12 +17,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="30dp"
-            android:text="Patient Name: Allen Walker"/>
-<!--        <Button-->
-<!--            android:id="@+id/addReminderButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Add" />-->
+            android:text="Patient Name"/>
     </LinearLayout>
     <Button
         android:id="@+id/addReminderButton"
