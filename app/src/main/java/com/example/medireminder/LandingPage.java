@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.medireminder.patient.forms.ViewReminderActivity;
+import com.example.medireminder.patient_list.PatientListActivity;
 import com.example.medireminder.ui.login.LoginActivity;
 import com.example.medireminder.ui.login.RegisterActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +32,8 @@ public class LandingPage extends AppCompatActivity {
     private TextView userName;
     private TextView useremail;
     private Button logOutBtn;
+    private Button nextPageBtn;
+    private boolean isPatient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +50,26 @@ public class LandingPage extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         useremail = findViewById(R.id.userEmail);
         logOutBtn = findViewById(R.id.logOutButton);
-        //useremail.setText(user[2]);
-        //getSupportActionBar().setTitle(user.getUid());
+        nextPageBtn = (Button) findViewById(R.id.nextPageButton);
+
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(LandingPage.this, LoginActivity.class));
+            }
+        });
+
+        // press button next nav to listview base on IsPatient parameter
+        nextPageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPatient) {
+                    Log.w("LandingPage", "IsPatient: " + isPatient);
+                    startActivity(new Intent(LandingPage.this, ViewReminderActivity.class));
+                } else {
+                    Log.w("LandingPage", "IsPatient: " + isPatient);
+                    startActivity(new Intent(LandingPage.this, PatientListActivity.class));
+                }
             }
         });
 
@@ -68,20 +86,14 @@ public class LandingPage extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Document found in the offline cache
                     DocumentSnapshot document = task.getResult();
-                    //List<User> types = document.toObjects(User.class);
                     Toast.makeText(LandingPage.this, "Hello!", Toast.LENGTH_LONG).show();
-                    //User user = document.toObject(User.class);
-                    //userName.setText(user.getFullName());
-
                     System.out.println(Objects.requireNonNull(document.getData()).get("FullName"));
                     System.out.println(user);
                     userName.setText(Objects.requireNonNull(document.getData()).get("FullName").toString());
                     useremail.setText(Objects.requireNonNull(document.getData()).get("email").toString());
-                    //System.out.println(document.getData().get('FullName'));
-//                    Log.d(TAG, "Cached document data: " + document.getData());
+                    isPatient = (boolean) document.getData().get("IsPatient");
                 } else {
                     Toast.makeText(LandingPage.this, "Retrieve user error", Toast.LENGTH_LONG).show();
-//                    Log.d(TAG, "Cached get failed: ", task.getException());
                 }
             }
         });

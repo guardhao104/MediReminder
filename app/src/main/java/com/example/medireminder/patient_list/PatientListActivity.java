@@ -65,33 +65,38 @@ public class PatientListActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-
+                                Log.d("PatientListActivity", document.getId() + " => " + document.getData());
                                 String fullname = document.getData().get("FullName").toString();
                                 String age = document.getData().get("Age").toString();
                                 String email = document.getData().get("email").toString();
+                                String uid = document.getId();
 
-                                Patient patient = new Patient(fullname, age, email);
+
+                                Patient patient = new Patient(fullname, age, email, uid);
                                 patientsList.add(patient);
 
-                                Log.d("PatientListActivity", "Test: " + fullname + " : " + age + " : " + email);
+                                PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, patientsList);
+                                listView = (ListView) findViewById(R.id.list_view_items);
+                                listView.setAdapter(adapter);
+
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                        Patient patient = patientsList.get(i);
+
+                                        Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
+                                        intent.putExtra("patientName", patient.getName());
+                                        intent.putExtra("patientAge", patient.getAge());
+                                        intent.putExtra("patientEmail", patient.getEmail());
+                                        intent.putExtra("patientUID", patient.getUID());
+
+                                        Log.d("PatientListActivity", "Test: " + patient.getUID());
+
+                                        startActivity(intent);
+                                    }
+                                });
+//                                Log.d("PatientListActivity", "Test: " + fullname + " : " + age + " : " + email);
                             }
-                            PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, patientsList);
-                            listView = (ListView) findViewById(R.id.list_view_items);
-                            listView.setAdapter(adapter);
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    Patient patient = patientsList.get(i);
-
-                                    Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
-                                    intent.putExtra("patientName", patient.getName());
-                                    intent.putExtra("patientAge", patient.getAge());
-                                    intent.putExtra("patientEmail", patient.getEmail());
-
-                                    startActivity(intent);
-                                }
-                            });
                         } else {
                             Log.w("PatientListActivity", "Error getting documents.", task.getException());
                         }
@@ -105,7 +110,6 @@ public class PatientListActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String s) {
-//                Log.d("PatientListActivity", "Search: " + s);
 
                 db.collection("users")
                         .whereEqualTo("IsPatient", true)
@@ -124,30 +128,31 @@ public class PatientListActivity extends AppCompatActivity {
                                         String age = document.getData().get("Age").toString();
                                         String email = document.getData().get("email").toString();
 
-                                        Patient patient = new Patient(fullname, age, email);
+                                        Patient patient = new Patient(fullname, age, email, document.getId());
                                         searchResultList.add(patient);
 
+                                        PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, searchResultList);
+                                        listView = (ListView) findViewById(R.id.list_view_items);
+                                        listView.setAdapter(null);
+                                        listView.setAdapter(adapter);
 
-                                        Log.d("PatientListActivity", document.getId() + " => " + document.getData());
+                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                Patient patient = patientsList.get(i);
+
+                                                Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
+                                                intent.putExtra("patientName", patient.getName());
+                                                intent.putExtra("patientAge", patient.getAge());
+                                                intent.putExtra("patientEmail", patient.getEmail());
+                                                intent.putExtra("patientUID", patient.getUID());
+
+                                                startActivity(intent);
+                                            }
+                                        });
+
+//                                        Log.d("PatientListActivity", document.getId() + " => " + document.getData());
                                     }
-                                    PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, searchResultList);
-                                    listView = (ListView) findViewById(R.id.list_view_items);
-                                    listView.setAdapter(null);
-                                    listView.setAdapter(adapter);
-
-                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                            Patient patient = patientsList.get(i);
-
-                                            Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
-                                            intent.putExtra("patientName", patient.getName());
-                                            intent.putExtra("patientAge", patient.getAge());
-                                            intent.putExtra("patientEmail", patient.getEmail());
-
-                                            startActivity(intent);
-                                        }
-                                    });
                                 } else {
                                     Log.w("PatientListActivity", "Error getting documents.", task.getException());
                                 }
@@ -175,28 +180,30 @@ public class PatientListActivity extends AppCompatActivity {
                                             String age = document.getData().get("Age").toString();
                                             String email = document.getData().get("email").toString();
 
-                                            Patient patient = new Patient(fullname, age, email);
+                                            Patient patient = new Patient(fullname, age, email, document.getId());
                                             redisplayltList.add(patient);
+
+                                            PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, redisplayltList);
+                                            listView = (ListView) findViewById(R.id.list_view_items);
+                                            listView.setAdapter(adapter);
+
+                                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                    Patient patient = redisplayltList.get(i);
+
+                                                    Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
+                                                    intent.putExtra("patientName", patient.getName());
+                                                    intent.putExtra("patientAge", patient.getAge());
+                                                    intent.putExtra("patientEmail", patient.getEmail());
+                                                    intent.putExtra("patientUID", patient.getUID());
+
+                                                    startActivity(intent);
+                                                }
+                                            });
 
                                             Log.d("PatientListActivity", "Test: " + fullname + " : " + age + " : " + email);
                                         }
-                                        PatientListAdapter adapter = new PatientListAdapter(PatientListActivity.this, R.layout.patient_item, redisplayltList);
-                                        listView = (ListView) findViewById(R.id.list_view_items);
-                                        listView.setAdapter(adapter);
-
-                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                Patient patient = redisplayltList.get(i);
-
-                                                Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
-                                                intent.putExtra("patientName", patient.getName());
-                                                intent.putExtra("patientAge", patient.getAge());
-                                                intent.putExtra("patientEmail", patient.getEmail());
-
-                                                startActivity(intent);
-                                            }
-                                        });
                                     } else {
                                         Log.w("PatientListActivity", "Error getting documents.", task.getException());
                                     }

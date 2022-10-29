@@ -31,35 +31,12 @@ public class ReminderList extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityReminderListBinding binding;
 
-    /**void x(){
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Ada");
-        user.put("last", "Lovelace");
-        user.put("born", 1815);
-        user.put("role", "patient");
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });    }*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityReminderListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        //setSupportActionBar(binding.toolbar);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_reminder_list);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();

@@ -1,12 +1,12 @@
-package com.example.medireminder.patient_info;
+package com.example.medireminder.patient.forms;
 
-public class PatientInfo {
+public class Reminder {
     private String medicinePhoto;
     private String reminderName;
     private String medicineName;
     private String reminderTime;
 
-    public PatientInfo(String medicinePhoto, String medicineName, String reminderTime, String reminderName) {
+    public Reminder(String medicinePhoto, String medicineName, String reminderTime, String reminderName) {
         this.medicinePhoto = medicinePhoto;
         this.medicineName = medicineName;
         this.reminderTime = reminderTime;

@@ -69,9 +69,17 @@
         android:id="@+id/logOutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log out"
+        android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        android:layout_gravity="center"/>
+        android:text="Log out" />
+
+    <Button
+        android:id="@+id/nextPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="Next" />
 
 
 </LinearLayout>

@@ -28,10 +28,12 @@ public class PatientInfoListAdapter extends ArrayAdapter {
         PatientInfo patientInfo = (PatientInfo) getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
 
-        ImageView medicinePhoto = (ImageView) view.findViewById(R.id.text_view_item_medicine_image);
+//        ImageView medicinePhoto = (ImageView) view.findViewById(R.id.text_view_item_medicine_image);
+        TextView reminderName = (TextView) view.findViewById(R.id.text_view_item_reminder_name);
         TextView medicineName = (TextView) view.findViewById(R.id.text_view_item_medicine_name);
         TextView reminderTime = (TextView) view.findViewById(R.id.text_view_item_medicine_time);
 
+        reminderName.setText(patientInfo.getReminderName());
         medicineName.setText(patientInfo.getMedicineName());
         reminderTime.setText(patientInfo.getReminderTime());
 
