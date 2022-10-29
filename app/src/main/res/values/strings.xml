@@ -124,6 +124,4 @@
     <string name="time">Time</string>
     <string name="name">Name</string>
     <string name="medicine">Medicine</string>
-    <string name="pharmacist">Pharmacist</string>
-    <string name="patient">Patient</string>
 </resources>

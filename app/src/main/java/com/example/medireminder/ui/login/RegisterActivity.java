@@ -80,7 +80,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
-        int type = 0;
 
         if(fullName.isEmpty()){
             editTextFullName.setError("Full name is required!");
@@ -122,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            User user = new User(fullName, age, email, type);
+                            User user = new User(fullName, age, email);
 
                             // Create a new user with a first and last name
                             FirebaseDatabase.getInstance().getReference("Users")
@@ -161,14 +160,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         userInfo.put("FullName", user.fullName);
         userInfo.put("Age", user.age);
         userInfo.put("email", user.email);
-        userInfo.put("User Type", user.type);
         db.collection("users")
                 .document(uid)
                 .set(userInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(RegisterActivity.this,"Register success",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this,"Register sucess",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
