@@ -99,7 +99,7 @@
     </LinearLayout>
     <Button
         android:id="@+id/uploadImgBtn"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Upload Image" />
@@ -107,14 +107,14 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="177dp"
+        android:layout_height="200dp"
         app:srcCompat="@drawable/upload_image" />
 
     <Button
         android:id="@+id/submitBtn"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="center"
         android:text="submit" />
 
 </LinearLayout>

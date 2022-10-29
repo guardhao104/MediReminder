@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -47,6 +48,10 @@ public class CreateReminderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reminder);
+
+        Intent intent=getIntent();
+        String uid = intent.getStringExtra("patientUID");
+        Log.d("CreateReminderActivity", "UID: " + uid);
 
         // register all the EditText fields with their IDs.
         remName = findViewById(R.id.nameET);
@@ -98,15 +103,19 @@ public class CreateReminderActivity extends AppCompatActivity {
                     String timeName = time.getText().toString();
 
                     String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    userID = uid;
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     WriteBatch batch = db.batch();
                     //DocumentReference patient = db.collection("users").document(whateverpatientuseridis);
+
                     DocumentReference pharmacist = db.collection("users").document(userID).collection("Reminders").document();
+
                     Map<String, Object> reminderInfo = new HashMap<>();
                     reminderInfo.put("ReminderName", reminderName);
                     reminderInfo.put("MedicineName", medicineName);
                     reminderInfo.put("Date", dateName);
                     reminderInfo.put("Time", timeName);
+
                     batch.set(pharmacist, reminderInfo);
                     //batch.set(patient, reminderInfo);
                     batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
