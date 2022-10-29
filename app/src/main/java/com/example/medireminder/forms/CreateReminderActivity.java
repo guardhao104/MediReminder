@@ -23,10 +23,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CreateReminderActivity extends AppCompatActivity {
@@ -51,7 +55,7 @@ public class CreateReminderActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         String uid = intent.getStringExtra("patientUID");
-        Log.d("CreateReminderActivity", "UID: " + uid);
+//        Log.d("CreateReminderActivity", "UID: " + uid);
 
         // register all the EditText fields with their IDs.
         remName = findViewById(R.id.nameET);
@@ -102,29 +106,36 @@ public class CreateReminderActivity extends AppCompatActivity {
                     String dateName = dateEdit.getText().toString();
                     String timeName = time.getText().toString();
 
-                    String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    userID = uid;
+                    String userID = uid;
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    WriteBatch batch = db.batch();
-                    //DocumentReference patient = db.collection("users").document(whateverpatientuseridis);
+                    DocumentReference docRef = db.collection("users").document(userID);
 
-                    DocumentReference pharmacist = db.collection("users").document(userID).collection("Reminders").document();
-
-                    Map<String, Object> reminderInfo = new HashMap<>();
-                    reminderInfo.put("ReminderName", reminderName);
-                    reminderInfo.put("MedicineName", medicineName);
-                    reminderInfo.put("Date", dateName);
-                    reminderInfo.put("Time", timeName);
-
-                    batch.set(pharmacist, reminderInfo);
-                    //batch.set(patient, reminderInfo);
-                    batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    // update userInput into database
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(getApplicationContext(),
-                                            "Submitted",
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    List<Map<String, Object>> reminderList = new ArrayList<Map<String, Object>>();
+                                    reminderList = (List<Map<String, Object>>) document.getData().get("Reminder");
+                                    Map<String, Object> reminderInfo = new HashMap<>();
+                                    reminderInfo.put("ReminderName", reminderName);
+                                    reminderInfo.put("MedicineName", medicineName);
+                                    reminderInfo.put("Date", dateName);
+                                    reminderInfo.put("Time", timeName);
+
+                                    reminderList.add(reminderInfo);
+                                    Log.d("CreateReminderActivity", "reminderList(after add): " + reminderList);
+                                    Map<String, Object> data = new HashMap<>();
+                                    data.put("Reminder", reminderList);
+                                    docRef.set(data, SetOptions.merge());
+                                } else {
+                                    Log.d("CreateReminderActivity", "No such document");
+                                }
+                            } else {
+                                Log.d("CreateReminderActivity", "get failed with ", task.getException());
+                            }
                         }
                     });
                 }
