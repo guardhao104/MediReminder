@@ -29,7 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -127,7 +129,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            User user = new User(fullName, age, email, true);
+                            List<Map<String, Object>> reminder = new ArrayList<Map<String, Object>>();
+                            User user = new User(fullName, age, email, true, reminder);
 
                             // Create a new user with a first and last name
                             FirebaseDatabase.getInstance().getReference("Users")
@@ -167,6 +170,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         userInfo.put("Age", user.age);
         userInfo.put("email", user.email);
         userInfo.put("IsPatient", user.isPatient);
+        userInfo.put("Reminder", user.reminder);
         db.collection("users")
                 .document(uid)
                 .set(userInfo)
