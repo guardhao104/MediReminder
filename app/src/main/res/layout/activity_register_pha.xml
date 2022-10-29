@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.RegisterActivity">
+    tools:context=".ui.login.RegisterPhaActivity">
     <TextView
         android:id="@+id/banner"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         android:id="@+id/bannerDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/patient"
+        android:text="@string/pharmacist"
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="italic"

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.example.medireminder.LandingPage;
 import com.example.medireminder.R;
+import com.example.medireminder.RegisterTypePage;
+
 /**import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch(view.getId()){
             case R.id.register:
                 System.out.println("TEST");
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterTypePage.class));
                 break;
         }
     }

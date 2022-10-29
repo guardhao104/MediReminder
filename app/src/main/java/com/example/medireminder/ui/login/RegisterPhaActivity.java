@@ -1,13 +1,10 @@
 package com.example.medireminder.ui.login;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,25 +17,23 @@ import com.example.medireminder.LandingPage;
 import com.example.medireminder.R;
 import com.example.medireminder.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterPhaActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private TextView banner, registerUser;
     private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
     private ProgressBar progressBar;
 
-    public RegisterActivity() {
+    public RegisterPhaActivity() {
     }
 
     @Override
@@ -80,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
-        int type = 0;
+        int type = 1;
 
         if(fullName.isEmpty()){
             editTextFullName.setError("Full name is required!");
@@ -132,14 +127,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
                                                 String userId;
-                                                Toast.makeText(RegisterActivity.this, "User successfully registered", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(RegisterPhaActivity.this, "User successfully registered", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.VISIBLE);
                                                 userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                                 System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                                 addToDatabase(userId, user);
-                                                startActivity(new Intent(RegisterActivity.this, LandingPage.class));
+                                                startActivity(new Intent(RegisterPhaActivity.this, LandingPage.class));
                                             }else{
-                                                Toast.makeText(RegisterActivity.this, "There has been an error", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(RegisterPhaActivity.this, "There has been an error", Toast.LENGTH_LONG).show();
                                                 progressBar.setVisibility(View.GONE);
 
                                             }
@@ -147,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     });
 
                         }else{
-                            Toast.makeText(RegisterActivity.this, "There has been an error before db creation", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterPhaActivity.this, "There has been an error before db creation", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -168,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(RegisterActivity.this,"Register success",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterPhaActivity.this,"Register success",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
