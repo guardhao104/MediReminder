@@ -23,12 +23,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class PatientInfoListActivity extends AppCompatActivity {
     private TextView patientName;
@@ -50,47 +55,38 @@ public class PatientInfoListActivity extends AppCompatActivity {
         String uid = intent.getStringExtra("patientUID");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(uid);
 
-//        DocumentReference pharmacist = db.collection("users").document(userID).collection("Reminders").document();
-
-//        db.collection("users")
-
-
-
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<Patient> searchResultList = new ArrayList<Patient>();
-
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("PatientInfoListActivity", document.getId() + " => " + document.getData());
-                                Log.d("PatientInfoListActivity", "thishishsihs");
-                            }
-                        } else {
-                            Log.w("PatientListActivity", "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-
-
-        initpatientInfoList();
-
-        PatientInfoListAdapter adapter = new PatientInfoListAdapter(PatientInfoListActivity.this, R.layout.patient_info_item, patientsInfoList);
-        listView = (ListView) findViewById(R.id.list_view_items);
-        listView.setAdapter(adapter);
-
-        // press listview item to open a new activity
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // get data from database and create list to show user's reminder
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                PatientInfo patient = patientsInfoList.get(i);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        List<Map<String, Object>> reminderList = new ArrayList<Map<String, Object>>();
+                        reminderList = (List<Map<String, Object>>) document.getData().get("Reminder");
 
-                Intent intent = new Intent(PatientInfoListActivity.this, PatientDetailsActivity.class);
+                        for(int i = 0; i < reminderList.size(); i++) {
+                            Map<String, Object> reminder = reminderList.get(i);
+                            String reminderName = (String) reminder.get("ReminderName");
+                            String reminderMedName = (String) reminder.get("MedicineName");
+                            String reminderTime = (String) reminder.get("Time");
+                            String reminderDate = (String) reminder.get("Date");
 
-                startActivity(intent);
+                            PatientInfo patientInfo = new PatientInfo(reminderName, reminderName, reminderMedName, reminderDate + " " + reminderTime);
+                            patientsInfoList.add(patientInfo);
+
+                            PatientInfoListAdapter adapter = new PatientInfoListAdapter(PatientInfoListActivity.this, R.layout.patient_info_item, patientsInfoList);
+                            listView = (ListView) findViewById(R.id.list_view_items);
+                            listView.setAdapter(adapter);
+                        }
+                    } else {
+                        Log.d("PatientInfoListActivity", "No such document");
+                    }
+                } else {
+                    Log.d("PatientInfoListActivity", "get failed with ", task.getException());
+                }
             }
         });
 
@@ -109,19 +105,5 @@ public class PatientInfoListActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void initpatientInfoList() {
-        PatientInfo patientInfo = new PatientInfo("a", "aa", "2000,10,31");
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
-        patientsInfoList.add(patientInfo);
     }
 }
