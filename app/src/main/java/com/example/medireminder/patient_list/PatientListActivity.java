@@ -139,7 +139,7 @@ public class PatientListActivity extends AppCompatActivity {
                                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                Patient patient = patientsList.get(i);
+                                                Patient patient = searchResultList.get(i);
 
                                                 Intent intent = new Intent(PatientListActivity.this, PatientInfoListActivity.class);
                                                 intent.putExtra("patientName", patient.getName());
