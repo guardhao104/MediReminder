@@ -86,22 +86,14 @@ public class LandingPage extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     // Document found in the offline cache
                     DocumentSnapshot document = task.getResult();
-                    //List<User> types = document.toObjects(User.class);
                     Toast.makeText(LandingPage.this, "Hello!", Toast.LENGTH_LONG).show();
-                    //User user = document.toObject(User.class);
-                    //userName.setText(user.getFullName());
-
                     System.out.println(Objects.requireNonNull(document.getData()).get("FullName"));
                     System.out.println(user);
                     userName.setText(Objects.requireNonNull(document.getData()).get("FullName").toString());
                     useremail.setText(Objects.requireNonNull(document.getData()).get("email").toString());
                     isPatient = (boolean) document.getData().get("IsPatient");
-
-                    //System.out.println(document.getData().get('FullName'));
-//                    Log.d(TAG, "Cached document data: " + document.getData());
                 } else {
                     Toast.makeText(LandingPage.this, "Retrieve user error", Toast.LENGTH_LONG).show();
-//                    Log.d(TAG, "Cached get failed: ", task.getException());
                 }
             }
         });
