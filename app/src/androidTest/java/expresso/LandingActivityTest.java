@@ -2,9 +2,14 @@ package expresso;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.hamcrest.Matchers.allOf;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,45 +43,32 @@ public class LandingActivityTest {
     private FirebaseAuth mAuth;
 
     @Rule
-    public ActivityTestRule<LandingPage> activityRule
-            = new ActivityTestRule<>(
-            LandingPage.class,
-            true,     // initialTouchMode
-            false);   // launchActivity. False to customize the intent
-//    public ActivityScenarioRule<LandingPage> activityRule =
-//            new ActivityScenarioRule<LandingPage>(LandingPage.class);
+    public ActivityScenarioRule<LandingPage> activityRule =
+            new ActivityScenarioRule<LandingPage>(LandingPage.class);
 
     @Test
-    public void intent() {
-        Intent intent = new Intent();
-//        intent.putExtra("your_key", "your_value");
-
-        activityRule.launchActivity(intent);
-
-        // Continue with your test
+    public void test_isActivityInView() {
+        onView((withId(R.id.landing))).check(matches(isDisplayed()));
+        onView(withId(R.id.NameTV)).check(matches((isDisplayed())));
+        onView(withId(R.id.EmailTV)).check(matches(isDisplayed()));
+        onView(withId(R.id.userName)).check(matches(isDisplayed()));
+        onView(withId(R.id.userEmail)).check(matches(isDisplayed()));
+        onView(withId(R.id.logOutButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.nextPageButton)).check(matches(isDisplayed()));
     }
-
 
     @Test
-    public void test_isTitleTextDisplayed() {
-        signIn("tester5@gmail.com", "tester5");
-//        onView(withId(R.id.userEmail)).check(matches(withText("tester5@gmail.com")));
-//        signIn("tester5@gmail.com", "tester5");
-
-
-
+    public void test_navPatientListActivity() {
+        onView(allOf(withId(R.id.nextPageButton), isDisplayed())).perform(click());
+        onView(withId(R.id.patient_list)).check(matches(isDisplayed()));
     }
 
-    private void signIn(String email, String password) {
-               mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        }
-                    }
-                });
+    @Test
+    public void test_patientListActicityBackLandingPage() {
+        onView(allOf(withId(R.id.nextPageButton), isDisplayed())).perform(click());
+        onView(withId(R.id.patient_list)).check(matches(isDisplayed()));
+        pressBack();
+        onView(withId(R.id.landing)).check(matches(isDisplayed()));
     }
+
 }

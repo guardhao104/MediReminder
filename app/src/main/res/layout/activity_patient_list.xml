@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".patient_list.PatientListActivity"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/patient_list">
 
 
     <SearchView

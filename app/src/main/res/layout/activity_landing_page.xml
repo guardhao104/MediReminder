@@ -51,10 +51,10 @@
             android:id="@+id/EmailTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="40dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="40dp"
             android:gravity="center"
+            android:paddingStart="40dp"
+            android:paddingTop="40dp"
+            android:paddingEnd="16dp"
             android:text="CurrentEmail" />
 
         <TextView
