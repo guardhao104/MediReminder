@@ -151,7 +151,7 @@ public class PatientListActivity extends AppCompatActivity {
                                             }
                                         });
 
-//                                        Log.d("PatientListActivity", document.getId() + " => " + document.getData());
+                                        Log.d("PatientListActivity", document.getId() + " => " + document.getData());
                                     }
                                 } else {
                                     Log.w("PatientListActivity", "Error getting documents.", task.getException());

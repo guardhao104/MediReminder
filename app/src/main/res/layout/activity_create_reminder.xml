@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/createReminderActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,14 +100,14 @@
     </LinearLayout>
     <Button
         android:id="@+id/uploadImgBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:layout_gravity="center"
         android:text="Upload Image" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
+        android:layout_width="1dp"
         android:layout_height="200dp"
         app:srcCompat="@drawable/upload_image" />
 

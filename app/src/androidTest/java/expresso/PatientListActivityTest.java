@@ -42,6 +42,8 @@ import java.util.Map;
 @LargeTest
 public class PatientListActivityTest {
 
+    final int listCount = 12;
+
     @Rule
     public ActivityScenarioRule<PatientListActivity> activityRule =
             new ActivityScenarioRule<PatientListActivity>(PatientListActivity.class);
@@ -58,26 +60,16 @@ public class PatientListActivityTest {
     @Test
     public void test_selectListItemToDetail() {
         SystemClock.sleep(1000);
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(0).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(1).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(2).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(3).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(4).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(5).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
-        onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(6).perform(click());
-        onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
-        pressBack();
+
+        for(int i = 0; i < listCount; i++) {
+            onData(anything()).inAdapterView(withId(R.id.list_view_items)).atPosition(i).perform(click());
+            onView((withId(R.id.patient_list_info))).check(matches(isDisplayed()));
+
+            onView((withId(R.id.patient_name))).check(matches(isDisplayed()));
+            onView(withId(R.id.addReminderButton)).check(matches(isDisplayed()));
+            onView(withId(R.id.list_view_items)).check(matches(isDisplayed()));
+
+            pressBack();
+        }
     }
 }

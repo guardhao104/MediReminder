@@ -84,10 +84,6 @@ public class LoginActivityTest {
         onView(allOf(withId(R.id.password), isDisplayed())).perform(replaceText(pwds[1]), closeSoftKeyboard());
         onView(allOf(withId(R.id.signIn), isDisplayed())).perform(click());
 
-//        onView(allOf(withId(R.id.email), isDisplayed())).perform(replaceText(names[2]), closeSoftKeyboard());
-//        onView(allOf(withId(R.id.password), isDisplayed())).perform(replaceText(pwds[2]), closeSoftKeyboard());
-//        onView(allOf(withId(R.id.signIn), isDisplayed())).perform(click());
-
         onView(allOf(withId(R.id.email), isDisplayed())).perform(replaceText(names[2]), closeSoftKeyboard());
         onView(allOf(withId(R.id.password), isDisplayed())).perform(replaceText(pwds[2]), closeSoftKeyboard());
         onView(allOf(withId(R.id.signIn), isDisplayed())).perform(click());
