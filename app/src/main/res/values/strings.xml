@@ -124,4 +124,7 @@
     <string name="time">Time</string>
     <string name="name">Name</string>
     <string name="medicine">Medicine</string>
+    
+    <string name="channel_name">Channeln</string>
+    <string name="channel_description">Channeld</string>
 </resources>
