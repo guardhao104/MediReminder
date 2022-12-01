@@ -1,5 +1,7 @@
 package com.example.medireminder.patient.forms;
 
+import static android.content.Intent.getIntent;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,8 +10,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+
+import java.util.List;
 
 public class AlarmReceive extends BroadcastReceiver{
 
@@ -19,6 +24,8 @@ public class AlarmReceive extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         int notificationId = intent.getIntExtra("notificationId", 0);
         String message = intent.getStringExtra("message");
+        String reminderName = intent.getStringExtra("reminderName");
+
 
         Intent mainIntent = new Intent(context, ViewReminderActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(
@@ -38,7 +45,7 @@ public class AlarmReceive extends BroadcastReceiver{
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("TITLE")
+                .setContentTitle(reminderName)
                 .setContentText(message)
                 .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
