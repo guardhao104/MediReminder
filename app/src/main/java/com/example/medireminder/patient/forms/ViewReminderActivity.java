@@ -3,12 +3,18 @@ package com.example.medireminder.patient.forms;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.medireminder.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,15 +24,23 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
+import java.time.OffsetTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-public class ViewReminderActivity extends AppCompatActivity {
+public class ViewReminderActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView patientName;
     private List<Reminder> ReminderList = new ArrayList<Reminder>();
     private ListView listView = null;
     private Button addReminderBtn;
+
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
+    private int notificationId = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +49,109 @@ public class ViewReminderActivity extends AppCompatActivity {
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(userUid);
+
+        Button button = (Button) findViewById(R.id.cReminder);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+
+                int rh = 0;
+                int rm = 0;
+                String rmessage = "";
+                String reminderName = "";
+                for(int i = 0; i < ReminderList.size(); i++)
+                {
+                    String str = ReminderList.get(i).getReminderName();
+                    String[] strarray = str.split("[ ]");
+
+                    String[] time = strarray[1].split(":");
+
+                    String hour = time[0];
+                    String min = time[1];
+
+                    rh = Integer.parseInt(hour);
+                    rm = Integer.parseInt(min);
+                    rmessage = ReminderList.get(i).getReminderTime();
+                    reminderName = ReminderList.get(i).getMedicineName();
+//                    Log.d("ViewReminderActivity", hour + " : " + min);
+//                    Log.d("ViewReminderActivity", ReminderList.get(i).getReminderTime()); // mname
+//                    Log.d("ViewReminderActivity", ReminderList.get(i).getReminderName()); // time
+//                    Log.d("ViewReminderActivity", ReminderList.get(i).getMedicineName()); // rname
+
+//                    Intent intent = new Intent(ViewReminderActivity.this, AlarmReceive.class);
+//                    intent.putExtra("notificationId", notificationId);
+//                    intent.putExtra("message", ReminderList.get(i).getReminderTime());
+//                    intent.putExtra("reminderName", ReminderList.get(i).getMedicineName());
+//
+//                    PendingIntent alarmIntent = PendingIntent.getBroadcast(
+//                            ViewReminderActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT
+//                    );
+
+//                    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//                        OffsetTime offset = OffsetTime.now();
+//
+//                        int h = offset.getHour();
+//                        int m = offset.getMinute();
+//                        int s = offset.getSecond();
+//
+//                        int second = (int) s + 5;
+//
+//
+//                        h =Integer.parseInt(hour);
+//                        m =Integer.parseInt(min);
+//
+//                        Log.d("ViewReminderActivity", h + " : " + m);
+//
+//                        Calendar startTime = Calendar.getInstance();
+//                        startTime.set(Calendar.HOUR_OF_DAY, h);
+//                        startTime.set(Calendar.MINUTE, m);
+//                        startTime.set(Calendar.SECOND, 0);
+//                        long alarmStartTime = startTime.getTimeInMillis();
+//
+//                        Log.d("ViewReminderActivity", "Time: " + h + " : " + m + " : " + second);
+//
+//                        alarmManager.set(AlarmManager.RTC_WAKEUP, alarmStartTime, alarmIntent);
+//                    }
+                }
+
+                Intent intent = new Intent(ViewReminderActivity.this, AlarmReceive.class);
+                intent.putExtra("notificationId", notificationId);
+                intent.putExtra("message", rmessage);
+                intent.putExtra("reminderName", reminderName);
+
+                PendingIntent alarmIntent = PendingIntent.getBroadcast(
+                        ViewReminderActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT
+                );
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    OffsetTime offset = OffsetTime.now();
+
+                    int h = offset.getHour();
+                    int m = offset.getMinute();
+                    int s = offset.getSecond();
+
+                    int second = (int) s + 5;
+
+
+                    h =rh;
+                    m =rm;
+
+                    Log.d("ViewReminderActivity", h + " : " + m);
+
+                    Calendar startTime = Calendar.getInstance();
+                    startTime.set(Calendar.HOUR_OF_DAY, h);
+                    startTime.set(Calendar.MINUTE, m);
+                    startTime.set(Calendar.SECOND, 0);
+                    long alarmStartTime = startTime.getTimeInMillis();
+
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, alarmStartTime, alarmIntent);
+                }
+            }
+        });
 
         // get data from database and create list to show user's reminder
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -68,5 +185,42 @@ public class ViewReminderActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(ViewReminderActivity.this, AlarmReceive.class);
+        intent.putExtra("notificationId", notificationId);
+        intent.putExtra("message", "Hello World");
+
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(
+                ViewReminderActivity.this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT
+        );
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            OffsetTime offset = OffsetTime.now();
+
+            int h = offset.getHour();
+            int m = offset.getMinute();
+            int s = offset.getSecond();
+
+            int second = (int) s + 5;
+
+
+            Calendar startTime = Calendar.getInstance();
+            startTime.set(Calendar.HOUR_OF_DAY, h);
+            startTime.set(Calendar.MINUTE, m);
+            startTime.set(Calendar.SECOND, second);
+            long alarmStartTime = startTime.getTimeInMillis();
+
+            Log.d("ViewReminderActivity", "Time: " + h + " : " + m + " : " + second);
+
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmStartTime, alarmIntent);
+        }
+
+        Toast.makeText(this, "Done!", Toast.LENGTH_SHORT).show();
     }
 }
